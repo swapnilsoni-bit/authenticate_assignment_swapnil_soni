@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 const CartPage = () => {
   const { cart, removeFromCart, calculateSubtotal, emptyCart } = useCart();
@@ -8,6 +9,7 @@ const CartPage = () => {
   const shippingCost = 10;
   const subtotal = calculateSubtotal();
   const total = subtotal + shippingCost;
+  const navigate = useNavigate();  // Initialize useNavigate hook
 
   const handleEmptyCart = () => {
     setShowConfirmModal(true);
@@ -16,6 +18,20 @@ const CartPage = () => {
   const confirmEmptyCart = () => {
     emptyCart();
     setShowConfirmModal(false);
+  };
+
+  // Handle "Continue to Checkout" button click
+  const handleCheckout = () => {
+    const userData = localStorage.getItem('user');  
+    const token = userData ? JSON.parse(userData).token : null;
+
+    if (!token) {
+      // If no token is found, redirect to login page
+      navigate('/login');
+    } else {
+      // Proceed to checkout (you can add your checkout logic here)
+      console.log('Proceeding to checkout');
+    }
   };
 
   return (
@@ -33,7 +49,7 @@ const CartPage = () => {
             </button>
           )}
         </div>
-        
+
         {cart.length === 0 ? (
           <p className="text-gray-500">Not ready to checkout? Continue Shopping</p>
         ) : (
@@ -88,7 +104,10 @@ const CartPage = () => {
                     <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
-                <button className="w-full bg-black text-white py-3 rounded-full shadow-2xl hover:bg-gray-600 transition-all">
+                <button
+                  onClick={handleCheckout}  // Use the new handleCheckout function
+                  className="w-full bg-black text-white py-3 rounded-full shadow-2xl hover:bg-gray-600 transition-all"
+                >
                   Continue to Checkout
                 </button>
               </div>

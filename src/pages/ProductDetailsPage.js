@@ -51,22 +51,12 @@ function ProductDetailsPage() {
   }
 
   const handleAddToCart = () => {
-    // Check if user is logged in by checking token in localStorage
-    const userData = localStorage.getItem('user');  
-    const token = userData ? JSON.parse(userData).token : null; 
-
-    if (!token) {
-      // If no token is found, redirect to login page
-      navigate('/login');
-    } else {
-      // If user is logged in, add to cart
       addToCart(product, quantity);
       setShowNotification(true);
 
       setTimeout(() => {
         setShowNotification(false);
       }, 3000);
-    }
   };
 
   const handleWishlistToggle = () => {
