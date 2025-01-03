@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function LoginPage() {
   const { login, loading, error, user, logout } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
+    const success = await login(username, password); // Check if login is successful
+
+    if (success) {
+      // If login is successful, navigate to the home page
+      navigate('/');
+    }
   };
 
   if (user) {
@@ -19,12 +26,11 @@ function LoginPage() {
           <p className="mb-4">Logged in as {user.username}</p>
          
           <button 
-  onClick={logout}
-  className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700"
->
-  Sign out
-</button>
-
+            onClick={logout}
+            className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700"
+          >
+            Sign out
+          </button>
         </div>
       </div>
     );
@@ -79,4 +85,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
